@@ -1,0 +1,41 @@
+.hompagemaincontainer{
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    background: whitesmoke;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    border-radius: 2rem;
+    box-shadow: black 5px 4px 15px;
+}
+
+.homeh1{
+    font-size:3rem;
+color:palevioletred;
+}
+.homeh1:hover{
+    font-size:3.2rem;
+color:rgb(238, 5, 83);
+}
+.homepagep{
+    font-size:1.5rem;
+    
+}
+
+.homepagebtn{
+    margin-top: 3rem;
+    height: 50px;
+    width: 200px;
+    font-size: 2rem;
+    border-radius: 4px;
+    background: silver;
+
+}
+.homepagebtn:hover{
+    font-size: 2.2rem;
+    height: 53px;
+    width: 205px;
+    transition: 2ms all ease;
+    
+}

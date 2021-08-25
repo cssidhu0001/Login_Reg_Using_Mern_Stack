@@ -1,0 +1,107 @@
+.verifyemailmaincon{
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    background: whitesmoke;
+    align-items: center;
+    height: 70vh;
+    border-radius: 1.5rem;
+    box-shadow: black 5px 4px 15px;
+}
+
+.verifyemailHeading{
+    margin-top:4rem;
+
+}
+.verifyemaillabel{
+    margin-left: 2.1rem;
+    display:block;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+.verifyemailheadingdiv{
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color:cadetblue;
+    font-weight: bold;
+}
+
+.verifyemailinput{
+    margin-left: 2.1rem;
+    width: 300px;
+    height: 50px;
+    background-color: rgb(180, 179, 179);
+    border-radius: 4px;
+    border:none;
+    border-bottom: 2px solid gray; 
+    outline: none;
+    font-size: 1rem;  
+    color:black; 
+    padding-left: 10px;
+}
+.verifyemailinput1{
+
+    width: 300px;
+    height: 50px;
+    background-color: rgb(180, 179, 179);
+    border-radius: 4px;
+    border:none;
+    border-bottom: 2px solid gray; 
+    outline: none;
+    font-size: 1rem;  
+    color:black; 
+    padding-left: 10px;
+}
+
+
+
+.verifyemailinput::placeholder{
+color: whitesmoke;
+}
+
+
+.btndiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+     margin: -1.5rem;
+    }
+
+
+
+.verifybtn{
+    margin: 1rem;
+    margin-top: 3rem;
+    width: 300px;
+    text-align: center;
+  padding:0.5rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: whitesmoke;
+  background: rgb(11, 117, 238);
+
+}
+.verifybtn1{
+    /* margin: 1rem; */
+    margin-top: 0.5rem;
+    width: 300px;
+    text-align: center;
+  padding:0.5rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: whitesmoke;
+  background: rgb(11, 117, 238);
+
+}
+.loginbtn:hover,.loginbtn1:hover {
+    cursor: pointer;
+   background-color: rgb(2, 37, 133);
+  font-size: 1.6rem;
+
+
+}

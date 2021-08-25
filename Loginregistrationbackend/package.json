@@ -1,0 +1,28 @@
+{
+  "name": "loginregistrationbackend",
+  "version": "1.0.0",
+  "description": "backend for the api",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "charanjeet singh sidhu",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "dotenv-defaults": "^2.0.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "math-floor": "^1.0.1",
+    "math-random": "^2.0.1",
+    "mongoose": "^5.13.7",
+    "nodemailer": "^6.6.3",
+    "react-scripts": "^4.0.3",
+    "upper-case-first": "^2.0.2"
+  }
+}
