@@ -26,17 +26,27 @@ const Register = ({settempuser}) => {
 
     const register=()=>{
         const {name, email ,phone, address, gender, password, confirmpassword}=user
-        if(name && email && phone && address && gender && (password===confirmpassword)) {
-            axios.post("http://localhost:3400/sendverifcationemail",user).then(res=>{
-                alert("Email Sent")
-                settempuser(res.data.tempuser)
-                history.push("/verifyemail")
-            })
-        }else{
-            alert("Cannot register user Try Again")
+        if (user){
+            if(name && email && phone && address && gender && (password===confirmpassword)) {
+                axios.post("http://localhost:3400/emailexist",user).then(res=>{
+                    console.log(res.data.exist)
+                    if (res.data.exist){
+                        alert("User Already Registered..Kindly Login ")
+                        history.push('/login')    
+                    } else {
+                        axios.post("http://localhost:3400/sendverifcationemail",user).then(res=>{
+                        alert("Email Sent")
+                        settempuser(res.data.tempuser)
+                        history.push("/verifyemail")
+                        })
+                    }
+                })
+            } else {
+                alert("Cannot register user Try Again")
+            }   
         }
     }
-
+    
     const loginuser=()=>{  
         history.push("/login")
     }

@@ -242,6 +242,19 @@ app.post("/register", (req, res) => {
   })
 })
 
+
+app.post("/emailexist", (req, res) => {
+    const { email, phone } = req.body;
+    console.log(email)
+    console.log(phone)
+    if (User.findOne({email:email}) || User.findOne({phone:phone})) {
+        res.send({exist:true})
+    } else {
+        res.send({exist:false})
+    }
+})
+
+
 function captcha(){
     const alphabets = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
     const first = alphabets[Math.floor(Math.random() * alphabets.length)];
