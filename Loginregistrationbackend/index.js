@@ -7,8 +7,12 @@ import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import multer from 'multer'
+import path from 'path'
 
 const app = express();
+const static_path = path.join(path.resolve(), "./passportimage");
+
+app.use(express.static(static_path));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
@@ -151,9 +155,22 @@ function sendEmailforverification(name, email) {
     return captchacode
 }
 
-app.post("/sendverifcationemail", (req, res) => {
+
+const Storage = multer.diskStorage({
+    destination: "./passportimage/uploads/",
+    filename:(req, file, cb)=>{
+        cb(null, file.fieldname+"_"+Date.now()+path.extname(file.originalname))
+    }
+})
+
+const upload = multer({ 
+    storage: Storage 
+}).single('passportimage')
+
+
+app.post("/sendverifcationemail", upload, (req, res) => {
     console.log("Email Verification function calling ...")
-    const { name, email, phone, gender, address, password, confirmpassword} = req.body;
+    const { name, email, phone, gender, address, password, confirmpassword, passportimage} = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -167,10 +184,12 @@ app.post("/sendverifcationemail", (req, res) => {
                 address: address,
                 password: password,
                 confirmpassword: confirmpassword,
-                captcha:captchacode
+                captcha:captchacode,
+                // passportimage*******
             })
         res.send({tempuser:tempuser})
         console.log("Email Verification send")
+        console.log(tempuser+passportimage)
         }
     })
 })
@@ -206,21 +225,8 @@ app.post("/login", (req, res) => {
 })
 
 
-  function passportImage(){
-    const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, './passportimage/passportuploads')
-        },
-        filename: function (req, file, cb) {
-          cb(null, Date.now()+'_'+file.originalname+"formImage")
-        } 
-      })
-      const upload = multer({ storage: storage })
-      return upload;
-  }
-
-app.post("/register", (req, res) => {
-    const { name, email, captcha, phone, gender, address, password, confirmpassword } = req.body;
+app.post("/register", upload,(req, res) => {
+    const { name, email, captcha, phone, gender, address, password, confirmpassword ,passportimage } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -235,7 +241,7 @@ app.post("/register", (req, res) => {
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
                 captcha : captcha
-                passportImage()
+                // passportImage()**********
             })
             console.log("saving :"+user)
             user.save(err => {
@@ -253,9 +259,14 @@ app.post("/register", (req, res) => {
 
 
 app.post("/emailexist", (req, res) => {
-    const { email, phone } = req.body;
-    // console.log(email)
-    // console.log(phone)
+    const { email, phone , passportimage } = req.body;
+    console.log(email)
+    console.log(phone)
+    console.log(passportimage)
+    
+    console.log(User.findOne({email:email}))
+    console.log(User.findOne({phone:phone}))
+    
     if (User.findOne({email:email}) || User.findOne({phone:phone})) {
         res.send({exist:true})
     } else {
