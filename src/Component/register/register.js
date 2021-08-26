@@ -33,11 +33,11 @@ const Register = ({settempuser}) => {
     }
 
     const register=()=>{
-        const {name, email ,phone, address, gender, password, confirmpassword}=user
+        const {name, email ,phone, address, gender, password, confirmpassword, passportimage}=user
         if (user){
             if(name && email && phone && address && gender && (password===confirmpassword)) {
                 axios.post("http://localhost:3400/emailexist",user).then(res=>{
-                    // console.log(res.data.exist)
+                    console.log(res.data.exist)
                     if (res.data.exist){
                         alert("User Already Registered..Kindly Login ")
                         history.push('/login')    
