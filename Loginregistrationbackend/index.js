@@ -6,8 +6,7 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-
-
+import multer from 'multer'
 
 const app = express();
 app.use(express.json())
@@ -59,6 +58,10 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         required:true
+    }, 
+    passportimage: {
+        type: String,
+        
     }, 
     captcha:{
         type: String,
@@ -203,13 +206,18 @@ app.post("/login", (req, res) => {
 })
 
 
-// app.post("/verify", (req, res) => {
-//     console.log("Verify Function Called")
-//     const{vcode}=req.body;
-//     console.log(vcode);
-        
-// console.log(vcode);
-// })
+  function passportImage(){
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, './passportimage/passportuploads')
+        },
+        filename: function (req, file, cb) {
+          cb(null, Date.now()+'_'+file.originalname+"formImage")
+        } 
+      })
+      const upload = multer({ storage: storage })
+      return upload;
+  }
 
 app.post("/register", (req, res) => {
     const { name, email, captcha, phone, gender, address, password, confirmpassword } = req.body;
@@ -227,6 +235,7 @@ app.post("/register", (req, res) => {
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
                 captcha : captcha
+                passportImage()
             })
             console.log("saving :"+user)
             user.save(err => {
@@ -245,8 +254,8 @@ app.post("/register", (req, res) => {
 
 app.post("/emailexist", (req, res) => {
     const { email, phone } = req.body;
-    console.log(email)
-    console.log(phone)
+    // console.log(email)
+    // console.log(phone)
     if (User.findOne({email:email}) || User.findOne({phone:phone})) {
         res.send({exist:true})
     } else {
