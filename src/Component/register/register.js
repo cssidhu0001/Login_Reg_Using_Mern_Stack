@@ -39,21 +39,12 @@ const Register = ({settempuser}) => {
         const {name, email ,phone, address, gender, password, confirmpassword, passportimage}=user
         if (user){
             if(name && email && phone && address && gender && (password===confirmpassword)) {
-<<<<<<< HEAD
-                axios.post("http://localhost:3400/emailexist",user).then(res=>{
-                    console.log(res.data.exist)
-                    if (res.data.exist){
-                        alert("User Already Registered..Kindly Login ")
-                        history.push('/login')    
-                    } else {
-=======
                 // axios.post("http://localhost:3400/emailexist",user).then(res=>{
                 //     // console.log(res.data.exist)
                 //     if (res.data.exist){
                 //         alert("User Already Registered..Kindly Login ")
                 //         history.push('/login')    
                 //     } else {
->>>>>>> 5c067ee7...  changes in image
                         axios.post("http://localhost:3400/sendverifcationemail",user).then(res=>{
                         alert("Email Sent")
                         settempuser(res.data.tempuser)
