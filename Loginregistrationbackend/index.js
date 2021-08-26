@@ -216,6 +216,7 @@ app.post("/login", (req, res) => {
         } 
       })
       const upload = multer({ storage: storage })
+      return upload;
   }
 
 app.post("/register", (req, res) => {
