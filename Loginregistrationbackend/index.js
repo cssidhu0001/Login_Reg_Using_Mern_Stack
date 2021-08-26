@@ -232,16 +232,21 @@ app.post("/register", upload,(req, res) => {
             res.send({message:"User Already Registered..Kindly Login "});
         } else {
             
+            const image=passportImage()
             const user = new User({
                 name: name,
                 email: email,
                 phone: phone,
                 gender: gender,
                 address: address,
+                passportimage:image,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
                 captcha : captcha
+<<<<<<< HEAD
                 // passportImage()**********
+=======
+>>>>>>> f5413f65... changes
             })
             console.log("saving :"+user)
             user.save(err => {
