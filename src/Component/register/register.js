@@ -13,13 +13,16 @@ const Register = ({settempuser}) => {
         phone: "",
         address: "",
         gender: "",
-        passportimage:"",
+        passportimage:null,
         password: "",
         confirmpassword: ""
     })
     const imageUpload=(e)=>{
-      setUser({...user,passportimage:e.target.passportimage
-      })
+      setUser({...user,passportimage:e.target.files[0]})
+//  console.log({...user,passportimage:e.target.files[0]})
+    //   console.log(e.target.files[0])
+    //   console.log(e.target)
+    //   console.log(e.target.files)
     //   console.log(setUser)
     }
 
@@ -36,24 +39,33 @@ const Register = ({settempuser}) => {
         const {name, email ,phone, address, gender, password, confirmpassword, passportimage}=user
         if (user){
             if(name && email && phone && address && gender && (password===confirmpassword)) {
+<<<<<<< HEAD
                 axios.post("http://localhost:3400/emailexist",user).then(res=>{
                     console.log(res.data.exist)
                     if (res.data.exist){
                         alert("User Already Registered..Kindly Login ")
                         history.push('/login')    
                     } else {
+=======
+                // axios.post("http://localhost:3400/emailexist",user).then(res=>{
+                //     // console.log(res.data.exist)
+                //     if (res.data.exist){
+                //         alert("User Already Registered..Kindly Login ")
+                //         history.push('/login')    
+                //     } else {
+>>>>>>> 5c067ee7...  changes in image
                         axios.post("http://localhost:3400/sendverifcationemail",user).then(res=>{
                         alert("Email Sent")
                         settempuser(res.data.tempuser)
                         history.push("/verifyemail")
                         })
                     }
-                })
+                // })
             } else {
                 alert("Cannot register user Try Again")
             }   
         }
-    }
+    // }
     
     const loginuser=()=>{  
         history.push("/login")
