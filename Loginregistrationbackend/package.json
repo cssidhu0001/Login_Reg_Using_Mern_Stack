@@ -21,6 +21,7 @@
     "math-floor": "^1.0.1",
     "math-random": "^2.0.1",
     "mongoose": "^5.13.7",
+    "multer": "^1.4.3",
     "nodemailer": "^6.6.3",
     "react-scripts": "^4.0.3",
     "upper-case-first": "^2.0.2"
