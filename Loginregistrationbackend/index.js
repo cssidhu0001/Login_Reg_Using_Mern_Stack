@@ -8,6 +8,10 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5c067ee7...  changes in image
 
 const app = express();
 const static_path = path.join(path.resolve(), "./passportimage");
@@ -183,9 +187,14 @@ app.post("/sendverifcationemail", upload, (req, res) => {
                 gender: gender,
                 address: address,
                 password: password,
+                // passportimage:passportimage,
                 confirmpassword: confirmpassword,
                 captcha:captchacode,
+<<<<<<< HEAD
                 // passportimage*******
+=======
+              
+>>>>>>> 5c067ee7...  changes in image
             })
         res.send({tempuser:tempuser})
         console.log("Email Verification send")
@@ -232,16 +241,21 @@ app.post("/register", upload,(req, res) => {
             res.send({message:"User Already Registered..Kindly Login "});
         } else {
             
+            // const image=passportImage()
             const user = new User({
                 name: name,
                 email: email,
                 phone: phone,
                 gender: gender,
                 address: address,
+                // passportimage:image,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
                 captcha : captcha
+<<<<<<< HEAD
                 // passportImage()**********
+=======
+>>>>>>> f5413f65... changes
             })
             console.log("saving :"+user)
             user.save(err => {
@@ -266,12 +280,20 @@ app.post("/emailexist", (req, res) => {
     
     console.log(User.findOne({email:email}))
     console.log(User.findOne({phone:phone}))
+<<<<<<< HEAD
     
     if (User.findOne({email:email}) || User.findOne({phone:phone})) {
         res.send({exist:true})
     } else {
+=======
+    if (User.findOne({email:email}) || User.findOne({phone:phone} )) {
+       
+        res.send({exist:false})
+    } else  {
+>>>>>>> 5c067ee7...  changes in image
         res.send({exist:false})
     }
+    
 })
 
 
