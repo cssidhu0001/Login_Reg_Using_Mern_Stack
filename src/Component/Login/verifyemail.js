@@ -20,10 +20,11 @@ const VerifyEmail=({tempuser})=>{
     const verifyEmailbtn=()=>{
         const {vcode}=verify
         alert("Email verification code  "+vcode)
-        console.log(vcode+" -- "+tempuser.captcha)
         if(vcode === tempuser.captcha ) {
             axios.post("http://localhost:3400/register",tempuser).then(res=>{
                 alert(res.data.message)
+                tempuser=undefined
+                console.log("tempuser-undefined")
                 history.push("/login") 
                 });
         }else{

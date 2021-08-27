@@ -19,7 +19,7 @@ function App() {
           <Route path="/login"><Login setloginuser={setloginuser} /> </Route>
           <Route path="/register"><Register settempuser={settempuser}/> </Route>
           <Route path="/verifyemail">
-            { tempuser._id ? <VerifyEmail tempuser={tempuser} /> : <Register settempuser={settempuser}/>  }
+            { tempuser && tempuser._id ? <VerifyEmail tempuser={tempuser} /> : <Register settempuser={settempuser}/>  }
           </Route>
         </Switch> 
       </Router>
