@@ -33,7 +33,6 @@ const Register = ({settempuser}) => {
         })
     }
 
-<<<<<<< HEAD
     const register=event=>{
         
         const data = new FormData();
@@ -56,22 +55,6 @@ const Register = ({settempuser}) => {
                             settempuser(res.data.tempuser)
                             history.push("/verifyemail")
                             }
-=======
-    const register=()=>{
-        const {name, email ,phone, address, gender, password, confirmpassword}=user
-        if (user){
-            if(name && email && phone && address && gender && (password===confirmpassword)) {
-                // axios.post("http://localhost:3400/emailexist",user).then(res=>{
-                //     console.log(res.data.exist)
-                //     if (res.data.exist){
-                //         alert("User Already Registered..Kindly Login ")
-                //         history.push('/login')    
-                //     } else {
-                        axios.post("http://localhost:3400/sendverifcationemail",user).then(res=>{
-                        alert("Email Sent")
-                        settempuser(res.data.tempuser)
-                        history.push("/verifyemail")
->>>>>>> 7757e384... changes
                         })
             } else {
                 alert("Cannot register user Try Again")
