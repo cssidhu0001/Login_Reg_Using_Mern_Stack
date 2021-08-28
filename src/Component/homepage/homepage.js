@@ -8,6 +8,7 @@ const Homepage=({user})=>{
         console.log("user-logout")
         window.location.reload();
     }
+    
     return(
         <div>
             <div className="hompagemaincontainer">

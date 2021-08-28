@@ -24,14 +24,10 @@ const Login =({setloginuser}) => {
     const login=()=>{
         const {email ,password}=user
         if(email && password) {
-            console.log(user)
             axios.post("http://localhost:3400/login",user)
             .then(res=>{
                 alert(res.data.message)
-                console.log(res.data.user)
                 cookies.set('myCookies', res.data.token);
-                console.log(cookies.get('myCookies'));
-
                 setloginuser(res.data.user)
                 history.push("/")
             })
