@@ -6,8 +6,8 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import multer from 'multer';
-import path from 'path';
+import multer from 'multer'
+import path from 'path'
 
 const app = express();
 const static_path = path.join(path.resolve(), "./imageUpload");
@@ -167,8 +167,12 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).single('imageupload')
 
-app.post("/sendverifcationemail", upload ,(req, res) => {
-    const { name, email, phone, gender, address, password, confirmpassword} = req.body;
+
+app.post("/sendverifcationemail", upload, (req, res) => {
+    console.log("Email Verification function calling ...")
+    const { name, email, phone, gender, address, password, confirmpassword, passportimage} = req.body;
+    const imagedb=passportimage.name
+            console.log(imagedb+"it is the image in verification")
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -181,9 +185,10 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                 gender: gender,
                 address: address,
                 password: password,
-                imageupload: req.file.filename,
+                passportimage:imagedb,
                 confirmpassword: confirmpassword,
-                captcha: captchacode
+                captcha:captchacode
+
             })
         res.send({tempuser:tempuser})
         console.log("Email Verification send")
@@ -228,16 +233,19 @@ app.post("/register",(req, res) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
         } else {
+            
+            const imagedb=passportimage.name
+            console.log(imagedb+"it is the image")
             const user = new User({
                 name: name,
                 email: email,
                 phone: phone,
                 gender: gender,
                 address: address,
-                imageupload: imageupload,
-                captcha : captcha,
+                passportimage:imagedb,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
+                captcha : captcha
             })
             user.save(err => {
                 if (err) {
@@ -251,6 +259,24 @@ app.post("/register",(req, res) => {
         }
   })
 })
+
+
+app.post("/emailexist", (req, res) => {
+    const { email, phone , passportimage } = req.body;
+    console.log(email)
+    console.log(phone)
+    console.log(passportimage)
+    
+    console.log(User.findOne({email:email}))
+    console.log(User.findOne({phone:phone}))
+    
+    if (User.findOne({email:email}) || User.findOne({phone:phone})) {
+        res.send({exist:true})
+    } else {
+        res.send({exist:false})
+    }
+})
+
 
 function captcha(){
     const alphabets = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
