@@ -11,7 +11,7 @@ import path from 'path';
 import  randomize from 'randomatic';
 
 const app = express();
-const static_path = path.join(path.resolve(), "./imageUpload");
+const static_path = path.join(path.resolve(), "../src/imageUpload");
 
 app.use(express.static(static_path));
 app.use(express.json())
@@ -159,7 +159,7 @@ function sendEmailforverification(name, email) {
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, "./imageUpload/")
+        cb(null, "../src/imageUpload/")
     },
     filename: function(req,file,cb){
         cb(null, Date.now()+"_"+file.originalname+"_"+"OnlineUplaod")
