@@ -51,7 +51,7 @@ const Register = ({settempuser}) => {
                         if (res.data.message){
                             alert(res.data.message)
                         } else {
-                            alert("Email Sent")
+                            alert("Verification Email sent to email address:"+user.email)
                             settempuser(res.data.tempuser)
                             history.push("/verifyemail")
                             }
