@@ -9,10 +9,11 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import  randomize from 'randomatic';
-// import url from 'url'
+import url from 'url'
 // import  nodeGeocoder  from 'node-geocoder'
 // import http from 'http';
 import requests from 'requests'
+import { url } from 'inspector';
 
 const app = express();
 const static_path = path.join(path.resolve(), "../src/imageUpload");
@@ -266,9 +267,9 @@ function captcha(){
 app.post("/location",(req, res) => {
     geolocation()
     function geolocation(){
-        
-//         const url=("https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=kathgodam&pretty=1").toString;
+        var adr = url.toString('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=kathgodam&pretty=1')
 
+<<<<<<< Updated upstream
 // request({url:url,json:true},(err,res)=>{
 // var data=res.body;
 // console.log(data.result[0].geometry);
@@ -279,19 +280,28 @@ requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f0
     console.log(locationDetails.lat)
     console.log(locationDetails.lng)
     res.send(locationDetails)
+=======
+requests({url:adr},(err,res)=>{
+var data=res.body;
+console.log(data.result[0].geometry);
+// requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=haldwani&pretty=1')
+// .on(requests({json:true},(err,res)=>{
+//     var data=res.body;
+//     console.log(data.result[0].geometry);
+>>>>>>> Stashed changes
 })
-.on('end', function (err) {
-  if (err) return console.log('connection closed due to errors', err);
- 
-  console.log('end');
+// )
+
+}
+
 });
 
 // })
 
 
 
-        }
-        })
+        // }
+        // })
 
 
 
