@@ -4,7 +4,9 @@
 *{
     margin: 0px;
     padding: 0px;
-    font-family: 'Ubuntu', sans-serif;;
+    font-family: 'Ubuntu', sans-serif;
+   
+
 }
 .registermaincon{
     display: flex;
@@ -12,7 +14,7 @@
     width: 40vw;
     background: whitesmoke;
     align-items: center;
-    height: 100vh;
+    height: 130vh;
     border-radius: 1.5rem;
     box-shadow: black 5px 4px 15px;
 }

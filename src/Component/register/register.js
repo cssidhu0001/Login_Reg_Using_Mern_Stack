@@ -11,7 +11,10 @@ const Register = ({settempuser}) => {
         name: "",
         email: "",
         phone: "",
-        address: "",
+        address:"",
+        country:"",
+        state:"",
+        city:"",
         gender: "",
         imageupload:null,
         password: "",
@@ -40,13 +43,16 @@ const Register = ({settempuser}) => {
         data.append("email",user.email)
         data.append("phone",user.phone)
         data.append("address",user.address)
+        data.append("country",user.country)
+        data.append("state",user.state)
+        data.append("city",user.city)
         data.append("gender",user.gender)
         data.append("password",user.password)
         data.append("confirmpassword",user.confirmpassword)
         data.append("imageupload",user.imageupload)
 
         if (user){
-            if(user.name && user.email && user.phone && user.imageupload && user.address && user.gender && (user.password===user.confirmpassword)) {
+            if(user.name && user.email && user.phone && user.imageupload && user.address && user.gender && user.country && user.state && user.city   && (user.password===user.confirmpassword)) {
                         axios.post("http://localhost:3400/sendverifcationemail",data).then(res=>{
                         if (res.data.message){
                             alert(res.data.message)
@@ -92,12 +98,21 @@ const Register = ({settempuser}) => {
                         <label htmlFor='other' className='reigsterlabelgen'>Other</label>
                     </div>
 
+                    <label htmlFor='country' className='reigsterlabel'>Country:</label>
+                    <input type='text' className='registerinput' id='country' name="country" value={user.country} onChange={handleChange} placeholder='Enter your Country here..' defaultValue='India' required />
+
+                    <label htmlFor='state' className='reigsterlabel'>State:</label>
+                    <input type='text' className='registerinput' id='state' name="state" value={user.state} onChange={handleChange} placeholder='Enter your state here..' required />
+    
+                    <label htmlFor='city' className='reigsterlabel'>City:</label>
+                    <input type='text' className='registerinput' id='city' name="city" value={user.city} onChange={handleChange} placeholder='Enter your City here..' required />
+                    
                     <label htmlFor='address' className='reigsterlabel'>Address:</label>
                     <input type='textarea' rows='10' cols='5' className='registerinput' name="address" id='address' value={user.address} onChange={handleChange} placeholder='Enter your address here..' required />
                     
                     
                     <label htmlFor='imageupload' className='reigsterlabel'>Passport Image:</label>
-                    <input type='file' className='registerinput' name="imageupload" id='imageupload'  onChange={imageUpload} required />
+                    <input type='file' className='registerinput' alt="Image Not Found" name="imageupload" id='imageupload'  onChange={imageUpload} required />
 
                     <label htmlFor='password' className='reigsterlabel'>Password:</label>
                     <input type='password' className='registerinput' id='password'  name="password" value={user.password}  onChange={handleChange} placeholder='Enter your password here..' required />
