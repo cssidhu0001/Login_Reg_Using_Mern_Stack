@@ -8,6 +8,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
+import  randomize from 'randomatic';
 
 const app = express();
 const static_path = path.join(path.resolve(), "./imageUpload");
@@ -186,7 +187,7 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                 captcha: captchacode
             })
         res.send({tempuser:tempuser})
-        console.log("Email Verification send")
+        // console.log("Email Verification send")
         }
     })
 })
@@ -210,7 +211,7 @@ app.post("/login", (req, res) => {
                         res.send("Token Generating Error"+err)
                     }
                     else {
-                        res.status(201).send({message:" you are Logined Successfully", user:user, token:token})
+                        res.status(201).send({message:" Logined Successfully", user:user, token:token})
                     }
                 })
             } else {
@@ -253,14 +254,7 @@ app.post("/register",(req, res) => {
 })
 
 function captcha(){
-    const alphabets = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
-    const first = alphabets[Math.floor(Math.random() * alphabets.length)];
-    const third = Math.floor(Math.random() * 10);
-    const fourth = alphabets[Math.floor(Math.random() * alphabets.length)];
-    const fifth = alphabets[Math.floor(Math.random() * alphabets.length)];
-    const sixth = Math.floor(Math.random() * 10);
-    const second = Math.floor(Math.random() * 10);
-    const  captcha1 = first.toString()+second.toString()+third.toString()+fourth.toString()+fifth.toString()+sixth.toString();  
+    const captcha1 = randomize("*",8) 
     return captcha1;
 }
 
