@@ -9,11 +9,8 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import  randomize from 'randomatic';
-import url from 'url'
-// import  nodeGeocoder  from 'node-geocoder'
-// import http from 'http';
 import requests from 'requests'
-import { url } from 'inspector';
+
 
 const app = express();
 const static_path = path.join(path.resolve(), "../src/imageUpload");
@@ -49,6 +46,18 @@ const userSchema = new mongoose.Schema({
 
     },
     address: {
+        type: String,
+        required: true
+    },
+   country: {
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    city: {
         type: String,
         required: true
     },
@@ -174,7 +183,7 @@ const storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('imageupload')
 
 app.post("/sendverifcationemail", upload ,(req, res) => {
-    const { name, email, phone, gender, address, password, confirmpassword} = req.body;
+    const { name, email, phone, gender, address,country,state,city, password, confirmpassword} = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -186,11 +195,15 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                 phone: phone,
                 gender: gender,
                 address: address,
+                country: country,
+                state: state,
+                city: city,
                 password: password,
                 imageupload: req.file.filename,
                 confirmpassword: confirmpassword,
                 captcha: captchacode
             })
+            // console.log(tempuser)
         res.send({tempuser:tempuser})
         // console.log("Email Verification send")
         }
@@ -229,7 +242,7 @@ app.post("/login", (req, res) => {
 
 
 app.post("/register",(req, res) => {
-    const { name, email, captcha, phone, gender, address, password, confirmpassword ,imageupload } = req.body;
+    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword ,imageupload } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -240,11 +253,15 @@ app.post("/register",(req, res) => {
                 phone: phone,
                 gender: gender,
                 address: address,
+                country: country,
+                state: state,
+                city: city,
                 imageupload: imageupload,
                 captcha : captcha,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
             })
+            
             user.save(err => {
                 if (err) {
                     console.log(err)
@@ -267,32 +284,20 @@ function captcha(){
 app.post("/location",(req, res) => {
     geolocation()
     function geolocation(){
-        var adr = url.toString('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=kathgodam&pretty=1')
-
-<<<<<<< Updated upstream
-// request({url:url,json:true},(err,res)=>{
-// var data=res.body;
-// console.log(data.result[0].geometry);
-requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=haldwani&pretty=1')
+requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=goraparow,haldwani&pretty=1')
 .on('data', function (chunk) { 
-    // var temp = chunk.replace('\\n','')
     var locationDetails = JSON.parse(chunk).results[0].geometry
-    console.log(locationDetails.lat)
+    var locationDetails1 = JSON.parse(chunk).results[0].components
+    var locationDetails2 = JSON.parse(chunk).results[0].formatted
+    
+        console.log(locationDetails.lat)
     console.log(locationDetails.lng)
+    console.log(locationDetails1)
+    console.log(locationDetails2)
+    
     res.send(locationDetails)
-=======
-requests({url:adr},(err,res)=>{
-var data=res.body;
-console.log(data.result[0].geometry);
-// requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=haldwani&pretty=1')
-// .on(requests({json:true},(err,res)=>{
-//     var data=res.body;
-//     console.log(data.result[0].geometry);
->>>>>>> Stashed changes
 })
-// )
-
-}
+    }
 
 });
 
