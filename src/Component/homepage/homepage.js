@@ -8,11 +8,12 @@ const Homepage=({user})=>{
         console.log("user-logout")
         window.location.reload();
     }
-    
+
     return(
         <div>
             <div className="hompagemaincontainer">
                 <h1 className='homeh1'> Hello {user.name}</h1>
+                <img src={require("../../imageUpload/"+user.imageupload).default}/>
                 <p className='homepagep'>Welcome to our Homepage you are sucessfully Logined Now </p>
                 <button className='homepagebtn' onClick={logout}> Logout </button>
             </div>
