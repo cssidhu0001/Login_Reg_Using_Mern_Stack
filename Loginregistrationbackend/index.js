@@ -9,6 +9,8 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import  randomize from 'randomatic';
+import url from 'url'
+// import  nodeGeocoder  from 'node-geocoder'
 
 const app = express();
 const static_path = path.join(path.resolve(), "../src/imageUpload");
@@ -257,6 +259,31 @@ function captcha(){
     const captcha1 = randomize("*",8) 
     return captcha1;
 }
+
+
+app.post("/location",(req, res) => {
+    geolocation()
+    function geolocation(){
+            let options = {
+                provider: 'openstreetmap'
+        //         provider: 'google',
+        //         apiKey: '76cc657768d7459f9f7f064704f2355b', 
+        // formatter:null
+              };
+               
+              let geoCoder = nodeGeocoder(options);
+        
+              geoCoder.geocode('lalkoun')
+          .then((res)=> {
+            console.log(res);
+          })
+          .catch((err)=> {
+            console.log(err);
+          });
+        }
+        })
+
+
 
 app.listen(3400, () => {
     console.log("server started at 3400")
