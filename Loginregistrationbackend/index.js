@@ -273,8 +273,12 @@ app.post("/location",(req, res) => {
 // var data=res.body;
 // console.log(data.result[0].geometry);
 requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=haldwani&pretty=1')
-.on('data', function (chunk) {
-  console.log(chunk['results'])
+.on('data', function (chunk) { 
+    // var temp = chunk.replace('\\n','')
+    var locationDetails = JSON.parse(chunk).results[0].geometry
+    console.log(locationDetails.lat)
+    console.log(locationDetails.lng)
+    res.send(locationDetails)
 })
 .on('end', function (err) {
   if (err) return console.log('connection closed due to errors', err);
