@@ -12,7 +12,7 @@ const Register = ({settempuser}) => {
         email: "",
         phone: "",
         address:"",
-        country:"",
+        country:"India",
         state:"",
         city:"",
         gender: "",
@@ -99,7 +99,7 @@ const Register = ({settempuser}) => {
                     </div>
 
                     <label htmlFor='country' className='reigsterlabel'>Country:</label>
-                    <input type='text' className='registerinput' id='country' name="country" value={user.country} onChange={handleChange} placeholder='Enter your Country here..' defaultValue='India' required />
+                    <input type='text' className='registerinput' id='country' name="country" value={user.country} onChange={handleChange} placeholder='Enter your Country here..' required />
 
                     <label htmlFor='state' className='reigsterlabel'>State:</label>
                     <input type='text' className='registerinput' id='state' name="state" value={user.state} onChange={handleChange} placeholder='Enter your state here..' required />

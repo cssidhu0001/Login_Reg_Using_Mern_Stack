@@ -1,15 +1,15 @@
-import express, { json } from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-import multer from 'multer';
-import path from 'path';
-import  randomize from 'randomatic';
-import requests from 'requests'
+const express = require ('express');
+const cors = require ('cors');
+const mongoose = require ('mongoose');
+const bcrypt = require ('bcryptjs');
+const jwt = require ('jsonwebtoken');
+const cookieParser = require ('cookie-parser');
+const nodemailer = require ('nodemailer');
+const dotenv = require ('dotenv');
+const multer = require ('multer');
+const path = require ('path');
+const randomize = require ('randomatic');
+const requests = require ('requests');
 
 
 const app = express();
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-   country: {
+    country: {
         type: String,
         required: true
     },
@@ -61,6 +61,20 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    geolocation:[{
+        geometry:{
+            type: String,
+            // default: null
+        },
+        components:{
+            type: String,
+            // default: null
+        },
+        formatted:{
+            type: String,
+            // default: null
+        }
+    }],
     email: {
         unique: true,
         type: String,
@@ -80,7 +94,6 @@ const userSchema = new mongoose.Schema({
     }, 
     imageupload: {
         type: String,
-        
     }, 
     captcha:{
         type: String,
@@ -170,6 +183,9 @@ function sendEmailforverification(name, email) {
     return captchacode;
 }
 
+function geolocationfunc (city){
+    
+}
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -184,28 +200,42 @@ var upload = multer({ storage: storage }).single('imageupload')
 
 app.post("/sendverifcationemail", upload ,(req, res) => {
     const { name, email, phone, gender, address,country,state,city, password, confirmpassword} = req.body;
-    User.findOne({ email: email }, (err, user) => {
+    User.findOne({ email: email }, async(err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
         } else {
             const captchacode = sendEmailforverification(name, email);            
-            const tempuser = new User({
-                name: name,
-                email: email,
-                phone: phone,
-                gender: gender,
-                address: address,
-                country: country,
-                state: state,
-                city: city,
-                password: password,
-                imageupload: req.file.filename,
-                confirmpassword: confirmpassword,
-                captcha: captchacode
+            let loc=`https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
+            requests(loc).on('data', function (chunk) {            
+                const geolocation = [
+                    [   
+                        JSON.stringify(JSON.parse(chunk).results[0].geometry.lat),
+                        JSON.stringify(JSON.parse(chunk).results[0].geometry.lng)
+                    ],
+                    JSON.stringify(JSON.parse(chunk).results[0].components),
+                    JSON.stringify(JSON.parse(chunk).results[0].formatted)
+                ]
+
+                const tempuser = new User({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    gender: gender,
+                    address: address,
+                    country: country,
+                    state: state,
+                    city: city,
+                    password: password,
+                    imageupload: req.file.filename,
+                    confirmpassword: confirmpassword,
+                    captcha: captchacode,
+                    geolocation:[{geometry:geolocation[0][0]+','+geolocation[0][1]},
+                        {components:geolocation[1]},{formatted:geolocation[2]}]
+                })
+                // console.log(tempuser)
+                res.send({tempuser:tempuser})
+                // console.log("Email Verification send")
             })
-            // console.log(tempuser)
-        res.send({tempuser:tempuser})
-        // console.log("Email Verification send")
         }
     })
 })
@@ -242,7 +272,7 @@ app.post("/login", (req, res) => {
 
 
 app.post("/register",(req, res) => {
-    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword ,imageupload } = req.body;
+    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword , imageupload, geolocation } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -260,6 +290,8 @@ app.post("/register",(req, res) => {
                 captcha : captcha,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
+                geolocation:[{geometry:geolocation[0].geometry},
+                    {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
             
             user.save(err => {
@@ -279,36 +311,6 @@ function captcha(){
     const captcha1 = randomize("*",8) 
     return captcha1;
 }
-
-
-app.post("/location",(req, res) => {
-    geolocation()
-    function geolocation(){
-requests('https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=goraparow,haldwani&pretty=1')
-.on('data', function (chunk) { 
-    var locationDetails = JSON.parse(chunk).results[0].geometry
-    var locationDetails1 = JSON.parse(chunk).results[0].components
-    var locationDetails2 = JSON.parse(chunk).results[0].formatted
-    
-        console.log(locationDetails.lat)
-    console.log(locationDetails.lng)
-    console.log(locationDetails1)
-    console.log(locationDetails2)
-    
-    res.send(locationDetails)
-})
-    }
-
-});
-
-// })
-
-
-
-        // }
-        // })
-
-
 
 app.listen(3400, () => {
     console.log("server started at 3400")
