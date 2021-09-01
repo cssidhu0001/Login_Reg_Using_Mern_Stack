@@ -76,7 +76,7 @@ const userSchema = new mongoose.Schema({
     //     }
     // }],
 
-  geolocation1:[{
+  geometry:[{
 longitude:{
     type:String,
 },
@@ -224,8 +224,9 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
             const captchacode = sendEmailforverification(name, email);            
             let loc=`https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
             requests(loc).on('data', function (chunk) {  
-                const geolocation1=[
-                    JSON.stringify(JSON.parse(chunk).results[0].geometry),
+                const geometry=[
+                    JSON.stringify(JSON.parse(chunk).results[0].geometry.lng),
+                    JSON.stringify(JSON.parse(chunk).results[0].geometry.lat)
                 ]
                 const geolocation=[
                     JSON.stringify(JSON.parse(chunk).results[0].components),
@@ -245,13 +246,14 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                     imageupload: req.file.filename,
                     confirmpassword: confirmpassword,
                     captcha: captchacode,
-                    geolocation1:[{longitude:geolocation[0][0]},{latitude:geolocation[0][1]}],
-                    geolocation:[ {components:geolocation[1]},{formatted:geolocation[2]}]
+                    geometry:[{longitude:geometry[0]},{latitude:geometry[1]}],
+                    geolocation:[{components:geolocation[0]},{formatted:geolocation[1]}]
                 })
                 console.log(captchacode)
-                console.log(geolocation1)
+                console.log(geometry)
                 console.log(geolocation)
-                console.log(captchacode)
+                console.log(tempuser)
+
                 res.send({tempuser:tempuser})
                 // console.log("Email Verification send")
             })
@@ -291,7 +293,7 @@ app.post("/login", (req, res) => {
 
 
 app.post("/register",(req, res) => {
-    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword , imageupload, geolocation } = req.body;
+    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword , imageupload, geometry, geolocation } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
             res.send({message:"User Already Registered..Kindly Login "});
@@ -309,13 +311,11 @@ app.post("/register",(req, res) => {
                 captcha : captcha,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
-                geolocation1:[{longitude:geolocation[0].geometry},{latitude:geolocation[0].geometry}],
-                
-                    geolocation:[ {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
+                geometry:[{longitude:geometry[0].longitude},{latitude:geometry[1].latitude}],
+                geolocation:[{components:geolocation[0].components},{formatted:geolocation[1].formatted}]
                 // geolocation:[{geometry:geolocation[0].geometry},
                 //     {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
-            console.log(geolocation1)
             
             user.save(err => {
                 if (err) {
