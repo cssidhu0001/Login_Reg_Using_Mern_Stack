@@ -61,19 +61,38 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    // geolocation:[{
+    //     geometry:{
+    //         type: String,
+    //         // default: null
+    //     },
+    //     components:{
+    //         type: String,
+    //         // default: null
+    //     },
+    //     formatted:{
+    //         type: String,
+    //         // default: null
+    //     }
+    // }],
+
+  geolocation1:[{
+longitude:{
+    type:String,
+},
+latitude:{
+    type:String,
+}
+    }],
+
     geolocation:[{
-        geometry:{
-            type: String,
-            // default: null
-        },
         components:{
-            type: String,
-            // default: null
-        },
-        formatted:{
-            type: String,
-            // default: null
-        }
+                    type: String,
+                },
+                formatted:{
+                    type: String,
+                }
+
     }],
     email: {
         unique: true,
@@ -183,9 +202,7 @@ function sendEmailforverification(name, email) {
     return captchacode;
 }
 
-function geolocationfunc (city){
-    
-}
+
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -206,8 +223,8 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
         } else {
             const captchacode = sendEmailforverification(name, email);            
             let loc=`https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
-            requests(loc).on('data', function (chunk) {            
-                const geolocation = [
+            requests(loc).on('data', function (chunk) {  
+                const geolocation=[
                     JSON.stringify(JSON.parse(chunk).results[0].geometry),
                     JSON.stringify(JSON.parse(chunk).results[0].components),
                     JSON.stringify(JSON.parse(chunk).results[0].formatted)
@@ -226,10 +243,10 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                     imageupload: req.file.filename,
                     confirmpassword: confirmpassword,
                     captcha: captchacode,
-                    geolocation:[{geometry:geolocation[0]},
-                        {components:geolocation[1]},{formatted:geolocation[2]}]
+                    geolocation1:[{longitude:geolocation[0]},{latitude:geolocation[0]}],
+                    geolocation:[ {components:geolocation[1]},{formatted:geolocation[2]}]
                 })
-                // console.log(tempuser)
+                console.log(captchacode)
                 res.send({tempuser:tempuser})
                 // console.log("Email Verification send")
             })
@@ -287,8 +304,10 @@ app.post("/register",(req, res) => {
                 captcha : captcha,
                 password: bcrypt.hashSync(password,10),
                 confirmpassword: bcrypt.hashSync(confirmpassword,10),
-                geolocation:[{geometry:geolocation[0].geometry},
-                    {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
+                geolocation1:[{longitude:geolocation[0].geometry},{latitude:geolocation[0].geometry}],
+                    geolocation:[ {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
+                // geolocation:[{geometry:geolocation[0].geometry},
+                //     {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
             
             user.save(err => {
