@@ -76,14 +76,22 @@ const userSchema = new mongoose.Schema({
     //     }
     // }],
 
-    geometry: [{
-        longitude: {
+    geometry: {
+        type:{
             type: String,
+            default: "Point"
         },
-        latitude: {
-            type: String,
+        coordinates: {
+            type: [Number],
+            index: "2dsphere"
         }
-    }],
+        // longitude: {
+        //     type: Number,
+        // },
+        // latitude: {
+        //     type: Number,
+        // }
+    },
 
     geolocation: [{
         components: {
@@ -221,12 +229,14 @@ app.post("/sendverifcationemail", upload, (req, res) => {
         if (user) {
             res.send({ message: "User Already Registered..Kindly Login " });
         } else {
-            const captchacode = sendEmailforverification(name, email);
+            
+            const captchacode = 123 //sendEmailforverification(name, email);
+
             let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
             requests(loc).on('data', function (chunk) {
                 const geometry = [
-                    JSON.stringify(JSON.parse(chunk).results[0].geometry.lng),
-                    JSON.stringify(JSON.parse(chunk).results[0].geometry.lat)
+                    parseFloat(JSON.parse(chunk).results[0].geometry.lng),
+                    parseFloat(JSON.parse(chunk).results[0].geometry.lat)
                 ]
                 const geolocation = [
                     JSON.stringify(JSON.parse(chunk).results[0].components),
@@ -246,14 +256,10 @@ app.post("/sendverifcationemail", upload, (req, res) => {
                     imageupload: req.file.filename,
                     confirmpassword: confirmpassword,
                     captcha: captchacode,
-                    geometry: [{ longitude: geometry[0] }, { latitude: geometry[1] }],
-                    geolocation: [{ components: geolocation[0] }, { formatted: geolocation[1] }]
+                    geolocation: [{ components: geolocation[0] }, { formatted: geolocation[1] }],
+                    geometry:{ coordinates: geometry} 
+                    // [{ longitude: geometry[0] }, { latitude: geometry[1] }]
                 })
-                console.log(captchacode)
-                console.log(geometry)
-                console.log(geolocation)
-                console.log(tempuser)
-
                 res.send({ tempuser: tempuser })
                 // console.log("Email Verification send")
             })
@@ -272,7 +278,7 @@ app.post("/login", (req, res) => {
 
                 const tkn = user._id.toString()
                 const token = jwt.sign({ tkn }, process.env.SECRETKEY)
-                sendEmailfun(user.email, user.name, user.phone)
+                //sendEmailfun(user.email, user.name, user.phone)
                 user.tokens = user.tokens.concat({ token })
                 user.save(err => {
                     if (err) {
@@ -311,8 +317,8 @@ app.post("/register", (req, res) => {
                 captcha: captcha,
                 password: bcrypt.hashSync(password, 10),
                 confirmpassword: bcrypt.hashSync(confirmpassword, 10),
-                geometry: [{ longitude: geometry[0].longitude }, { latitude: geometry[1].latitude }],
-                geolocation: [{ components: geolocation[0].components }, { formatted: geolocation[1].formatted }]
+                geolocation: [{ components: geolocation[0].components }, { formatted: geolocation[1].formatted }],
+                geometry: geometry
                 // geolocation:[{geometry:geolocation[0].geometry},
                 //     {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
@@ -335,29 +341,24 @@ function captcha() {
     return captcha1;
 }
 
-app.post("/locationfinder", (req, res) => {
-    const distanceval = 500
-    const longitude = "79.527918";
-    const latitude = "29.2144604";
-    const unit = "mi";
-    if (!longitude || !latitude) {
-        console.log("Longitude or Latitude value not found")
-    }
+app.post("/locationfinder", async(req, res) => {
+    console.log("\nMapping ----->>>")
+    const distn = 5
+    const longitude = 79.527918
+    const latitude = 29.2144604
+    const radius = distn / 6378.1 
 
-    const radius = unit === 'mi' ? distanceval / 3963.2 : distanceval / 6368.1;
-    console.log( "Raidus"+radius)
-    console.log(distanceval, longitude, latitude, unit)
+    // https://www.latlong.net/c/?lat=29.2144604&long=79.527918
+    // Dehradun,Haridwar,Roorkee,Rudrapur,Kashipur,Rishikesh,Haldwani,Bareilly
+    // https://www.mapdevelopers.com/draw-circle-tool.php
+    // https://www.nhc.noaa.gov/gccalc.shtml
 
-    userSchema.index({startlocation:'2dsphere'})
-    const tours =User.geometry.find({
-        startlocation: { $geoWithin:{ $centerSphere: [[longitude, latitude], radius] } }
-    });
-   
-   console.log([tours])
- 
-});
-
-
+    const cities = await User.find({
+        geometry: { $geoWithin: { $centerSphere: [[longitude,latitude], radius] }}
+    })
+    console.log(`No of cities in range ${distn} km: ${cities.length} . \n Listed as: \n ${cities}`)
+    console.log("Mapping Done <<<-----")
+})
 
 
 app.listen(3400, () => {
