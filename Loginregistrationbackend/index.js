@@ -1,15 +1,15 @@
-const express = require ('express');
-const cors = require ('cors');
-const mongoose = require ('mongoose');
-const bcrypt = require ('bcryptjs');
-const jwt = require ('jsonwebtoken');
-const cookieParser = require ('cookie-parser');
-const nodemailer = require ('nodemailer');
-const dotenv = require ('dotenv');
-const multer = require ('multer');
-const path = require ('path');
-const randomize = require ('randomatic');
-const requests = require ('requests');
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+const multer = require('multer');
+const path = require('path');
+const randomize = require('randomatic');
+const requests = require('requests');
 
 
 const app = express();
@@ -23,7 +23,7 @@ app.use(cookieParser());
 dotenv.config()
 
 // DataBase Connection
-mongoose.connect( process.env.DB , {
+mongoose.connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -76,22 +76,22 @@ const userSchema = new mongoose.Schema({
     //     }
     // }],
 
-  geometry:[{
-longitude:{
-    type:String,
-},
-latitude:{
-    type:String,
-}
+    geometry: [{
+        longitude: {
+            type: String,
+        },
+        latitude: {
+            type: String,
+        }
     }],
 
-    geolocation:[{
-        components:{
-                    type: String,
-                },
-                formatted:{
-                    type: String,
-                }
+    geolocation: [{
+        components: {
+            type: String,
+        },
+        formatted: {
+            type: String,
+        }
 
     }],
     email: {
@@ -109,19 +109,19 @@ latitude:{
     },
     gender: {
         type: String,
-        required:true
-    }, 
+        required: true
+    },
     imageupload: {
         type: String,
-    }, 
-    captcha:{
-        type: String,
-        required : true
     },
-    tokens:[{
-        token:{
-            type:String,
-            required:true
+    captcha: {
+        type: String,
+        required: true
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
     }]
 });
@@ -130,23 +130,23 @@ const User = new mongoose.model("User", userSchema);
 
 
 // Sending a login Confirmation Email to the user i.e the user has sucessfully logined 
-function sendEmailfun(email,name,phone) {
-    var transporter= nodemailer.createTransport({
-        service:process.env.services,
-        tls:{
-            rejectUnauthorized:false
+function sendEmailfun(email, name, phone) {
+    var transporter = nodemailer.createTransport({
+        service: process.env.services,
+        tls: {
+            rejectUnauthorized: false
         },
-        auth:{
-            user:process.env.user,
-            pass:process.env.pass
+        auth: {
+            user: process.env.user,
+            pass: process.env.pass
         }
     })
-        
+
     transporter.sendMail({
-    from:process.env.from,
-    to:email,
-    subject:"Login Sucessful",
-    text:`Hello ${name},
+        from: process.env.from,
+        to: email,
+        subject: "Login Sucessful",
+        text: `Hello ${name},
            Your Login is succesfull with us. 
            Kindly use your account and dont forget to Logout for your safety Reasons.
            
@@ -156,33 +156,33 @@ function sendEmailfun(email,name,phone) {
            Username:${name}  
            Contact No:${phone}
            Thankyou `,
-    },(err,res)=>{
-        if(err){
+    }, (err, res) => {
+        if (err) {
             console.log(err);
-        }else{
+        } else {
             res.status(201).send("Mail sent Sucessfully");
         }
     })
 }
 
 function sendEmailforverification(name, email) {
-    var captchacode=captcha();
-    var transporter= nodemailer.createTransport({
-        service:process.env.services,
-        tls:{
-            rejectUnauthorized:false
+    var captchacode = captcha();
+    var transporter = nodemailer.createTransport({
+        service: process.env.services,
+        tls: {
+            rejectUnauthorized: false
         },
-        auth:{
-            user:process.env.user,
-            pass:process.env.pass
+        auth: {
+            user: process.env.user,
+            pass: process.env.pass
         }
     })
-        
+
     transporter.sendMail({
-    from:process.env.from,
-    to:email,
-    subject:"Email Verification code",
-    html:`<pre>Hello ${name},
+        from: process.env.from,
+        to: email,
+        subject: "Email Verification code",
+        html: `<pre>Hello ${name},
         Your Email verification code is <b><style=font-size:1.5rem> ${captchacode}</b>.
         Kindly use this code to verify your email address.
                         
@@ -192,10 +192,10 @@ function sendEmailforverification(name, email) {
             Thankyou 
                         
            <i><style=text-align:center color:grey> *This is an autogenerated Email please do not reply.*</i></pre>`,
-    },(err,res)=>{
-        if(err){
+    }, (err, res) => {
+        if (err) {
             console.log(err);
-        }else{
+        } else {
             res.status(201).send("Mail sent Sucessfully");
         }
     })
@@ -205,30 +205,30 @@ function sendEmailforverification(name, email) {
 
 
 const storage = multer.diskStorage({
-    destination: function(req,file,cb){
+    destination: function (req, file, cb) {
         cb(null, "../src/imageUpload/")
     },
-    filename: function(req,file,cb){
-        cb(null, Date.now()+"_"+file.originalname+"_"+"OnlineUplaod")
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "_" + file.originalname + "_" + "OnlineUplaod")
     }
 })
 
 var upload = multer({ storage: storage }).single('imageupload')
 
-app.post("/sendverifcationemail", upload ,(req, res) => {
-    const { name, email, phone, gender, address,country,state,city, password, confirmpassword} = req.body;
-    User.findOne({ email: email }, async(err, user) => {
+app.post("/sendverifcationemail", upload, (req, res) => {
+    const { name, email, phone, gender, address, country, state, city, password, confirmpassword } = req.body;
+    User.findOne({ email: email }, async (err, user) => {
         if (user) {
-            res.send({message:"User Already Registered..Kindly Login "});
+            res.send({ message: "User Already Registered..Kindly Login " });
         } else {
-            const captchacode = sendEmailforverification(name, email);            
-            let loc=`https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
-            requests(loc).on('data', function (chunk) {  
-                const geometry=[
+            const captchacode = sendEmailforverification(name, email);
+            let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
+            requests(loc).on('data', function (chunk) {
+                const geometry = [
                     JSON.stringify(JSON.parse(chunk).results[0].geometry.lng),
                     JSON.stringify(JSON.parse(chunk).results[0].geometry.lat)
                 ]
-                const geolocation=[
+                const geolocation = [
                     JSON.stringify(JSON.parse(chunk).results[0].components),
                     JSON.stringify(JSON.parse(chunk).results[0].formatted)
                 ]
@@ -246,15 +246,15 @@ app.post("/sendverifcationemail", upload ,(req, res) => {
                     imageupload: req.file.filename,
                     confirmpassword: confirmpassword,
                     captcha: captchacode,
-                    geometry:[{longitude:geometry[0]},{latitude:geometry[1]}],
-                    geolocation:[{components:geolocation[0]},{formatted:geolocation[1]}]
+                    geometry: [{ longitude: geometry[0] }, { latitude: geometry[1] }],
+                    geolocation: [{ components: geolocation[0] }, { formatted: geolocation[1] }]
                 })
                 console.log(captchacode)
                 console.log(geometry)
                 console.log(geolocation)
                 console.log(tempuser)
 
-                res.send({tempuser:tempuser})
+                res.send({ tempuser: tempuser })
                 // console.log("Email Verification send")
             })
         }
@@ -268,35 +268,35 @@ app.post("/login", (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
-            if (bcrypt.compareSync(password,user.password)) {
-                
+            if (bcrypt.compareSync(password, user.password)) {
+
                 const tkn = user._id.toString()
-                const token = jwt.sign({tkn},process.env.SECRETKEY)
-                sendEmailfun(user.email,user.name,user.phone)
-                user.tokens = user.tokens.concat({token})
+                const token = jwt.sign({ tkn }, process.env.SECRETKEY)
+                sendEmailfun(user.email, user.name, user.phone)
+                user.tokens = user.tokens.concat({ token })
                 user.save(err => {
                     if (err) {
                         console.log(err)
-                        res.send("Token Generating Error"+err)
+                        res.send("Token Generating Error" + err)
                     }
                     else {
-                        res.status(201).send({message:" Logined Successfully", user:user, token:token})
+                        res.status(201).send({ message: " Logined Successfully", user: user, token: token })
                     }
                 })
             } else {
-                res.status(201).send({message:"Invalid Credentials...Please Try Again!!"});
+                res.status(201).send({ message: "Invalid Credentials...Please Try Again!!" });
             }
         } else
-            res.send({message:"User Not in the database .. Kindly Register... "});
-     }); 
+            res.send({ message: "User Not in the database .. Kindly Register... " });
+    });
 })
 
 
-app.post("/register",(req, res) => {
-    const { name, email, captcha, phone, gender, address,country,state,city, password, confirmpassword , imageupload, geometry, geolocation } = req.body;
+app.post("/register", (req, res) => {
+    const { name, email, captcha, phone, gender, address, country, state, city, password, confirmpassword, imageupload, geometry, geolocation } = req.body;
     User.findOne({ email: email }, (err, user) => {
         if (user) {
-            res.send({message:"User Already Registered..Kindly Login "});
+            res.send({ message: "User Already Registered..Kindly Login " });
         } else {
             const user = new User({
                 name: name,
@@ -308,32 +308,57 @@ app.post("/register",(req, res) => {
                 state: state,
                 city: city,
                 imageupload: imageupload,
-                captcha : captcha,
-                password: bcrypt.hashSync(password,10),
-                confirmpassword: bcrypt.hashSync(confirmpassword,10),
-                geometry:[{longitude:geometry[0].longitude},{latitude:geometry[1].latitude}],
-                geolocation:[{components:geolocation[0].components},{formatted:geolocation[1].formatted}]
+                captcha: captcha,
+                password: bcrypt.hashSync(password, 10),
+                confirmpassword: bcrypt.hashSync(confirmpassword, 10),
+                geometry: [{ longitude: geometry[0].longitude }, { latitude: geometry[1].latitude }],
+                geolocation: [{ components: geolocation[0].components }, { formatted: geolocation[1].formatted }]
                 // geolocation:[{geometry:geolocation[0].geometry},
                 //     {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
-            
+
             user.save(err => {
                 if (err) {
                     console.log(err)
                     res.send(err)
                 }
                 else {
-                    res.send({message:"user Registered Sucessfully ...Kindly Login"})
+                    res.send({ message: "user Registered Sucessfully ...Kindly Login" })
                 }
             })
         }
-  })
+    })
 })
 
-function captcha(){
-    const captcha1 = randomize("*",8) 
+function captcha() {
+    const captcha1 = randomize("*", 8)
     return captcha1;
 }
+
+app.post("/locationfinder", (req, res) => {
+    const distanceval = 500
+    const longitude = "79.527918";
+    const latitude = "29.2144604";
+    const unit = "mi";
+    if (!longitude || !latitude) {
+        console.log("Longitude or Latitude value not found")
+    }
+
+    const radius = unit === 'mi' ? distanceval / 3963.2 : distanceval / 6368.1;
+    console.log( "Raidus"+radius)
+    console.log(distanceval, longitude, latitude, unit)
+
+    userSchema.index({startlocation:'2dsphere'})
+    const tours =User.geometry.find({
+        startlocation: { $geoWithin:{ $centerSphere: [[longitude, latitude], radius] } }
+    });
+   
+   console.log([tours])
+ 
+});
+
+
+
 
 app.listen(3400, () => {
     console.log("server started at 3400")
