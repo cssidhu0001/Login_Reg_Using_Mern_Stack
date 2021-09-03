@@ -23,7 +23,7 @@ app.use(cookieParser());
 dotenv.config()
 
 // DataBase Connection
-mongoose.connect(process.env.DB, {
+mongoose.connect(process.env.DBlocalhost, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -341,12 +341,36 @@ function captcha() {
     return captcha1;
 }
 
+<<<<<<< Updated upstream
 app.post("/locationfinder", async(req, res) => {
     console.log("\nMapping ----->>>")
     const distn = 5
     const longitude = 79.527918
     const latitude = 29.2144604
     const radius = distn / 6378.1 
+=======
+app.post("/locationfinder", (req, res) => {
+    const distanceval = 500
+    const longitude = "79.527918";
+    const latitude = "29.2144604";
+    const unit = "mi";
+    if (!longitude || !latitude) {
+        console.log("Longitude or Latitude value not found")
+    }
+
+    const radius = unit === 'mi' ? distanceval / 3963.2 : distanceval / 6368.1;
+    console.log( "Raidus"+radius)
+    console.log(distanceval, longitude, latitude, unit)
+
+    userSchema.index({startlocation:'2dsphere'})
+    const tours =User.geometry.find({
+        startlocation: { $geoWithin:{ $centerSphere: [[longitude, latitude], radius] } }
+    });
+   
+   console.log([tours])
+
+});
+>>>>>>> Stashed changes
 
     // https://www.latlong.net/c/?lat=29.2144604&long=79.527918
     // Dehradun,Haridwar,Roorkee,Rudrapur,Kashipur,Rishikesh,Haldwani,Bareilly
