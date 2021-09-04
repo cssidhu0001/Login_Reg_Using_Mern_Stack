@@ -1,8 +1,9 @@
 import React from "react"
 import "./homepage.css"
+import {useHistory } from 'react-router-dom';
 
 const Homepage=({user})=>{
-   
+    const history = useHistory();
     const logout = ()=>{
         user=undefined
         console.log("user-logout")
