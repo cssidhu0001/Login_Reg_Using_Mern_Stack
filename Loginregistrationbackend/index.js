@@ -23,7 +23,7 @@ app.use(cookieParser());
 dotenv.config()
 
 // DataBase Connection
-mongoose.connect(process.env.DBlocalhost, {
+mongoose.connect(process.env.DBAltlas, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -61,21 +61,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // geolocation:[{
-    //     geometry:{
-    //         type: String,
-    //         // default: null
-    //     },
-    //     components:{
-    //         type: String,
-    //         // default: null
-    //     },
-    //     formatted:{
-    //         type: String,
-    //         // default: null
-    //     }
-    // }],
-
     geometry: {
         type:{
             type: String,
@@ -85,12 +70,7 @@ const userSchema = new mongoose.Schema({
             type: [Number],
             index: "2dsphere"
         }
-        // longitude: {
-        //     type: Number,
-        // },
-        // latitude: {
-        //     type: Number,
-        // }
+    
     },
 
     geolocation: [{
@@ -230,8 +210,8 @@ app.post("/sendverifcationemail", upload, (req, res) => {
             res.send({ message: "User Already Registered..Kindly Login " });
         } else {
             
-            const captchacode = 123 //sendEmailforverification(name, email);
-
+            const captchacode = sendEmailforverification(name, email);
+console.log(captchacode);
             let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
             requests(loc).on('data', function (chunk) {
                 const geometry = [
@@ -242,7 +222,7 @@ app.post("/sendverifcationemail", upload, (req, res) => {
                     JSON.stringify(JSON.parse(chunk).results[0].components),
                     JSON.stringify(JSON.parse(chunk).results[0].formatted)
                 ]
-
+console.log(geometry)
                 const tempuser = new User({
                     name: name,
                     email: email,
@@ -259,9 +239,9 @@ app.post("/sendverifcationemail", upload, (req, res) => {
                     geolocation: [{ components: geolocation[0] }, { formatted: geolocation[1] }],
                     geometry:{ coordinates: geometry} 
                     // [{ longitude: geometry[0] }, { latitude: geometry[1] }]
-                })
+                })  
                 res.send({ tempuser: tempuser })
-                // console.log("Email Verification send")
+                console.log("Email Verification send")
             })
         }
     })
@@ -278,7 +258,7 @@ app.post("/login", (req, res) => {
 
                 const tkn = user._id.toString()
                 const token = jwt.sign({ tkn }, process.env.SECRETKEY)
-                //sendEmailfun(user.email, user.name, user.phone)
+                sendEmailfun(user.email, user.name, user.phone)
                 user.tokens = user.tokens.concat({ token })
                 user.save(err => {
                     if (err) {
@@ -341,36 +321,12 @@ function captcha() {
     return captcha1;
 }
 
-<<<<<<< Updated upstream
 app.post("/locationfinder", async(req, res) => {
     console.log("\nMapping ----->>>")
     const distn = 5
     const longitude = 79.527918
     const latitude = 29.2144604
     const radius = distn / 6378.1 
-=======
-app.post("/locationfinder", (req, res) => {
-    const distanceval = 500
-    const longitude = "79.527918";
-    const latitude = "29.2144604";
-    const unit = "mi";
-    if (!longitude || !latitude) {
-        console.log("Longitude or Latitude value not found")
-    }
-
-    const radius = unit === 'mi' ? distanceval / 3963.2 : distanceval / 6368.1;
-    console.log( "Raidus"+radius)
-    console.log(distanceval, longitude, latitude, unit)
-
-    userSchema.index({startlocation:'2dsphere'})
-    const tours =User.geometry.find({
-        startlocation: { $geoWithin:{ $centerSphere: [[longitude, latitude], radius] } }
-    });
-   
-   console.log([tours])
-
-});
->>>>>>> Stashed changes
 
     // https://www.latlong.net/c/?lat=29.2144604&long=79.527918
     // Dehradun,Haridwar,Roorkee,Rudrapur,Kashipur,Rishikesh,Haldwani,Bareilly

@@ -9,6 +9,10 @@ const Homepage=({user})=>{
         window.location.reload();
     }
 
+    const findnearbyme=()=>{  
+        history.push("/locationfinder")
+       }
+
     return(
         <div>
             <div className="hompagemaincontainer">
@@ -16,6 +20,7 @@ const Homepage=({user})=>{
                 <img id='passportimage' src={require("../../imageUpload/"+user.imageupload).default} alt=""/>
                 <p className='homepagep'>Welcome to our Homepage you are sucessfully Logined Now </p>
                 <button className='homepagebtn' onClick={logout}> Logout </button>
+                <button className='homepagebtn' onClick={findnearbyme}>Find Near By Me </button>
             </div>
         </div>
     );

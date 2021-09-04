@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+
+
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Ubuntu', sans-serif;
+   
+
+}
+.locationmaincon{
+    display: flex;
+    flex-direction:column;
+    width: 40vw;
+    background: whitesmoke;
+    align-items: center;
+    height: 130vh;
+    border-radius: 1.5rem;
+    box-shadow: black 5px 4px 15px;
+}
+
+.locationHeading{
+    margin-top:2rem;
+    color: steelblue;
+
+}
+.locationHeading1{
+    margin-top:.5rem;
+    margin-bottom: 0.5rem;
+    font-size:1rem;
+    color: rgb(11, 15, 19);
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+.locationlabel{
+    display:block;
+    /* margin-top: 2rem; */
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+
+.locationinput{
+    width: 300px;
+    height: 30px;
+    border:none;
+    border-bottom: 2px solid gray;
+    outline: none;
+    background: rgb(247, 245, 245);
+    margin:.5rem .5rem .5rem 0rem;
+}
+
+.btndiv{
+    margin: -1.5rem;
+}
+.findbtn{
+    margin: 1rem;
+    margin-top: 1.8rem;
+    width: 300px;
+    text-align: center;
+  padding:0.5rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: whitesmoke;
+  background: rgb(11, 117, 238);
+
+}
+.findbtn:hover{
+    cursor: pointer;
+   background-color: rgb(2, 37, 133);
+  font-size: 1.6rem;
+}
