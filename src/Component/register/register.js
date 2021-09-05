@@ -53,6 +53,7 @@ const Register = ({settempuser}) => {
 
         if (user){
             if(user.name && user.email && user.phone && user.imageupload && user.address && user.gender && user.country && user.state && user.city   && (user.password===user.confirmpassword)) {
+                    alert("Wait for 3 second while we sending a verification mail at registered mail : "+user.email)    
                         axios.post("http://localhost:3400/sendverifcationemail",data).then(res=>{
                         if (res.data.message){
                             alert(res.data.message)
@@ -87,8 +88,8 @@ const Register = ({settempuser}) => {
 
                     <label htmlFor='phone' className='reigsterlabel'>Phone:</label>
                     <input type='text' className='registerinput' id='phone' name="phone" value={user.phone} onChange={handleChange} placeholder='Enter your phone here..' required />
+                    
                     <div className='genderdiv'>
-
                         <label htmlFor='male' className='reigsterlabelgen'>Gender:</label>
                         <input type='radio' className='registerinputgen' id='male' name='gender' value="male" onChange={handleChange} required />
                         <label htmlFor='male' className='reigsterlabelgen'>Male</label>

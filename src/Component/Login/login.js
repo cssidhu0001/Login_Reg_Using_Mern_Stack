@@ -41,12 +41,6 @@ const Login =({setloginuser}) => {
         history.push("/register")
     }
 
-    const map=()=>{  
-        axios.post("http://localhost:3400/locationfinder").then(res=>{
-            history.push("/")
-        })
-    }
-
     return (
         <div>
             <div className="loginmaincon">
@@ -63,7 +57,6 @@ const Login =({setloginuser}) => {
                     <div className='btndiv'>
                             <div className='loginbtn' onClick={login}>Login</div>
                             <div className='loginbtn1' onClick={register}>Register</div>
-                            <div className='loginbtn1' onClick={map}>Map</div>
                         </div>
                     </form>
                 </div>
