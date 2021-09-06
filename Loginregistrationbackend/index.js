@@ -10,6 +10,7 @@ const multer = require('multer');
 const path = require('path');
 const randomize = require('randomatic');
 const requests = require('requests');
+const { setInterval } = require('timers');
 
 
 const app = express();
@@ -23,7 +24,7 @@ app.use(cookieParser());
 dotenv.config()
 
 // DataBase Connection
-mongoose.connect(process.env.DBAltlas, {
+mongoose.connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -190,14 +191,12 @@ function sendEmailforverification(name, email) {
     return captchacode;
 }
 
-
-
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "../src/imageUpload/")
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + "_" + file.originalname + "_" + "OnlineUplaod")
+        cb(null, Date.now() + "_" + file.originalname + "_" + "OnlineUpload")
     }
 })
 
@@ -209,9 +208,7 @@ app.post("/sendverifcationemail", upload, (req, res) => {
         if (user) {
             res.send({ message: "User Already Registered..Kindly Login " });
         } else {
-            
             const captchacode = sendEmailforverification(name, email);
-console.log(captchacode);
             let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
             requests(loc).on('data', function (chunk) {
                 const geometry = [
@@ -222,7 +219,7 @@ console.log(captchacode);
                     JSON.stringify(JSON.parse(chunk).results[0].components),
                     JSON.stringify(JSON.parse(chunk).results[0].formatted)
                 ]
-console.log(geometry)
+
                 const tempuser = new User({
                     name: name,
                     email: email,
@@ -238,10 +235,9 @@ console.log(geometry)
                     captcha: captchacode,
                     geolocation: [{ components: geolocation[0] }, { formatted: geolocation[1] }],
                     geometry:{ coordinates: geometry} 
-                    // [{ longitude: geometry[0] }, { latitude: geometry[1] }]
                 })  
                 res.send({ tempuser: tempuser })
-                console.log("Email Verification send")
+                // console.log("Email Verification send")
             })
         }
     })
@@ -299,8 +295,6 @@ app.post("/register", (req, res) => {
                 confirmpassword: bcrypt.hashSync(confirmpassword, 10),
                 geolocation: [{ components: geolocation[0].components }, { formatted: geolocation[1].formatted }],
                 geometry: geometry
-                // geolocation:[{geometry:geolocation[0].geometry},
-                //     {components:geolocation[1].components},{formatted:geolocation[2].formatted}]
             })
 
             user.save(err => {
@@ -321,23 +315,28 @@ function captcha() {
     return captcha1;
 }
 
-app.post("/locationfinder", async(req, res) => {
-    console.log("\nMapping ----->>>")
-    const distn = 5
-    const longitude = 79.527918
-    const latitude = 29.2144604
-    const radius = distn / 6378.1 
+app.post("/locationfinder", (req, res) => {
 
-    // https://www.latlong.net/c/?lat=29.2144604&long=79.527918
-    // Dehradun,Haridwar,Roorkee,Rudrapur,Kashipur,Rishikesh,Haldwani,Bareilly
-    // https://www.mapdevelopers.com/draw-circle-tool.php
-    // https://www.nhc.noaa.gov/gccalc.shtml
+    const {unit,user} = req.body;
+    const distn = Number(req.body.distn)
+    const city = req.body.city==='' ? user.city : req.body.city ;
+    const radius = unit==="mi" ? distn / 3963.2 : distn / 6378.1 ; 
 
-    const cities = await User.find({
-        geometry: { $geoWithin: { $centerSphere: [[longitude,latitude], radius] }}
+    let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
+    requests(loc).on('data', async function (chunk) {
+        const longitude = parseFloat(JSON.parse(chunk).results[0].geometry.lng)
+        const latitude = parseFloat(JSON.parse(chunk).results[0].geometry.lat)
+        const cities = await User.find({
+            geometry: { $geoWithin: { $centerSphere: [[longitude,latitude], radius] }}
+        })
+        console.log(`${cities}`)
+        res.send({cities:`${cities}`})
+    
+        // https://www.latlong.net/c/?lat=29.2144604&long=79.527918
+        // Dehradun,Haridwar,Roorkee,Rudrapur,Kashipur,Rishikesh,Haldwani,Bareilly
+        // https://www.mapdevelopers.com/draw-circle-tool.php
+        // https://www.nhc.noaa.gov/gccalc.shtml
     })
-    console.log(`No of cities in range ${distn} km: ${cities.length} . \n Listed as: \n ${cities}`)
-    console.log("Mapping Done <<<-----")
 })
 
 
