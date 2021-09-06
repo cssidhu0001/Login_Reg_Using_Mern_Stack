@@ -51,8 +51,8 @@ form{
 }
 
 .unitdiv{
-    display: flex;
-    flex-direction: row;
+    /* display: flex;
+    flex-direction: row; */
 }
 .locationinputunit{
     margin-top: 0.4rem;

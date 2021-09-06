@@ -1,15 +1,26 @@
-import React from "react"
+import React, { useState } from "react"
 import "./homepage.css"
 import {useHistory } from 'react-router-dom';
+import axios from "axios";
+import Cookies from 'universal-cookie';
 
 const Homepage=({user})=>{
 
     const history = useHistory();
+    const cookies = new Cookies();
+
+    const [senduser] = useState({
+        tempuser: user
+    })
 
     const logout = ()=>{
-        user=undefined
-        console.log("user-logout")
-        window.location.reload();
+        cookies.remove("myCookies")
+        axios.post("http://localhost:3400/logout",senduser).then(res=>{
+            alert(res.data.message)
+            user=undefined
+            console.log("user-logout")
+            window.location.reload();
+        });
     }
 
     const findnearbyme=()=>{  
