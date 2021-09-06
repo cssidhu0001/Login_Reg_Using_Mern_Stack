@@ -24,7 +24,7 @@ app.use(cookieParser());
 dotenv.config()
 
 // DataBase Connection
-mongoose.connect(process.env.DB, {
+mongoose.connect(process.env.DBAltlas, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema({
     },
     geometry: {
         type:{
-            type: String,
+            // type: String,
             default: "Point"
         },
         coordinates: {
@@ -209,7 +209,7 @@ app.post("/sendverifcationemail", upload, (req, res) => {
             res.send({ message: "User Already Registered..Kindly Login " });
         } else {
             const captchacode = sendEmailforverification(name, email);
-            let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
+            let loc = `https://api.opencagedata.com/geocode/v1/json?key=2f281c9d9c9846578e842fc1d60473b5&q=${city}`
             requests(loc).on('data', function (chunk) {
                 const geometry = [
                     parseFloat(JSON.parse(chunk).results[0].geometry.lng),
@@ -256,13 +256,16 @@ app.post("/login", (req, res) => {
                 const token = jwt.sign({ tkn }, process.env.SECRETKEY)
                 sendEmailfun(user.email, user.name, user.phone)
                 user.tokens = user.tokens.concat({ token })
+                console.log(user.tokens)
                 user.save(err => {
                     if (err) {
                         console.log(err)
                         res.send("Token Generating Error" + err)
                     }
                     else {
-                        res.status(201).send({ message: " Logined Successfully", user: user, token: token })
+                        console.log("logined")
+                        res.status(201).send({  message: " Logined Successfully", user: user, token: token });
+                        // res.status(201).send({ message: " Logined Successfully", user: user, token: token })
                     }
                 })
             } else {
@@ -322,7 +325,7 @@ app.post("/locationfinder", (req, res) => {
     const city = req.body.city==='' ? user.city : req.body.city ;
     const radius = unit==="mi" ? distn / 3963.2 : distn / 6378.1 ; 
 
-    let loc = `https://api.opencagedata.com/geocode/v1/json?key=76cc657768d7459f9f7f064704f2355b&q=${city}`
+    let loc = `https://api.opencagedata.com/geocode/v1/json?key=2f281c9d9c9846578e842fc1d60473b5&q=${city}`
     requests(loc).on('data', async function (chunk) {
         const longitude = parseFloat(JSON.parse(chunk).results[0].geometry.lng)
         const latitude = parseFloat(JSON.parse(chunk).results[0].geometry.lat)
@@ -338,6 +341,7 @@ app.post("/locationfinder", (req, res) => {
         // https://www.nhc.noaa.gov/gccalc.shtml
     })
 })
+
 
 
 app.listen(3400, () => {

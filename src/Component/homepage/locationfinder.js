@@ -32,26 +32,33 @@ const Locationfinder =({user}) => {
     }
 
     return (
-        <div>
+        <div className="locationmaincon">
+        <h1 className='locationHeading'>Find Near by me Locations</h1>
+    
+        <div className='locationformdiv'>
             <form>
                 <label htmlFor='city'>City:</label>
                 <input type="text" onChange={handleChange} name="city" value={findlocn.city} id="distn" placeholder="By default your registered city" className="locationinput"/>
                 
                 <label htmlFor='distn'>Distance:</label>
-                <input type="text" onChange={handleChange} name="distn" value={Number(findlocn.distn)} id="distn" placeholder="Distance" className="locationinput"/>
+                <input type="text" onChange={handleChange} name="distn" value={Number(findlocn.distn)} id="distn" placeholder="Distance (Enter only numeric value)" className="locationinput"/>
                 
-                <label htmlFor='km' className='reigsterlabelgen'>Unit:</label>
-                <input type='radio' className='locationlabel' id='km' name='unit' value="km" onChange={handleChange} />
-                <label htmlFor='km' className='reigsterlabelgen'>km</label>
-                <input type='radio' className='locationlabel' id='mi' name='unit' value="mi" onChange={handleChange} />
-                <label htmlFor='mi' className='reigsterlabelgen'>mi</label>
-                
+                <div className='unitdiv'>
+                <label htmlFor='km' className='locationlabel'>Unit:</label>
+                <input type='radio' className='locationinputunit' id='km' name='unit' value="km" onChange={handleChange} />
+                <label htmlFor='km' className='locationlabel'>Kilometers</label>
+                <input type='radio' className='locationinputunit' id='mi' name='unit' value="mi" onChange={handleChange} />
+                <label htmlFor='mi' className='locationlabel'>Miles</label>
+                </div>
+
                 <div className="btndiv">
                     <button className="findbtn" onClick={locationfinder}>Go</button>
                     <button className="findbtn" onClick={homepage}>Back</button>
                 </div>
             </form>
         </div>
+        </div>
+        
     );
 
 }

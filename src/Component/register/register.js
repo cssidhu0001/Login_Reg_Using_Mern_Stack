@@ -74,10 +74,10 @@ const Register = ({settempuser}) => {
     }
         
     return (
-        <div className="registermaincon">
-            <h1 className='registerHeading'>Sign Up..! Create Account</h1>
-            <h1 className='registerHeading1 ' >Already have a Account.<span onClick={loginuser}> Sign In</span>  </h1>
-            <div className='registerformdiv'>
+        <div className="locationmaincon">
+            <h1 className='locationHeading'>Sign Up..! Create Account</h1>
+            <h1 className='locationHeading1 ' >Already have a Account.<span onClick={loginuser}> Sign In</span>  </h1>
+            <div className='locationformdiv'>
                 <form encType="multipart/form-data">
                     
                     <label htmlFor='name' className='reigsterlabel'>Name:</label>

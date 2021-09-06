@@ -27,7 +27,8 @@ const Login =({setloginuser}) => {
             axios.post("http://localhost:3400/login",user)
             .then(res=>{
                 alert(res.data.message)
-                cookies.set('myCookies', res.data.token);
+               console.log(res.data.message)
+                cookies.set('myCookies',res.data.token);
                 setloginuser(res.data.user)
                 history.push("/")
             })
@@ -40,6 +41,10 @@ const Login =({setloginuser}) => {
     const register=()=>{  
         history.push("/register")
     }
+
+    // const findnear=()=>{  
+    //  history.push("/locationfinder")
+    // }
 
     return (
         <div>
@@ -57,6 +62,8 @@ const Login =({setloginuser}) => {
                     <div className='btndiv'>
                             <div className='loginbtn' onClick={login}>Login</div>
                             <div className='loginbtn1' onClick={register}>Register</div>
+                            {/* <div className='loginbtn1' onClick={findnear}>Find Near By me</div>  */}
+                         
                         </div>
                     </form>
                 </div>

@@ -5,7 +5,7 @@
     background: whitesmoke;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    height: 90vh;
     border-radius: 2rem;
     box-shadow: black 5px 4px 15px;
 }
@@ -26,7 +26,7 @@ color:rgb(238, 5, 83);
 .homepagebtn{
     margin-top: 3rem;
     height: 50px;
-    width: 200px;
+    width: 300px;
     font-size: 2rem;
     border-radius: 4px;
     background: silver;
@@ -35,10 +35,11 @@ color:rgb(238, 5, 83);
 .homepagebtn:hover{
     font-size: 2.2rem;
     height: 53px;
-    width: 205px;
+    width: 305px;
     transition: 2ms all ease;
     
 }
+
 #passportimage{
     width:15rem;
     height: 18rem;
